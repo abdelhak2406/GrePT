@@ -25,4 +25,7 @@ toolbox run -c dev npx vitest run -t "falls back when the title has no valid cha
 
 - Build artifacts are generated in `dist/`.
 - Load `dist/` as an unpacked extension in Chromium-based browsers.
-- The extension currently includes a background service worker and a ChatGPT content script scaffold.
+- Open any ChatGPT conversation page, click the extension action, and it downloads:
+  - `YYYY-MM-DD_HH-mm-ss_<title>.md`
+  - `YYYY-MM-DD_HH-mm-ss_<title>.json`
+- The exporter is DOM-based, so it can mark exports as partial when the page appears not fully loaded.
