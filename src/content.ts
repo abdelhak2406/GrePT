@@ -1,9 +1,8 @@
 import type { ConversationExportPayload, ConversationMessage, ConversationRole } from './shared/export-model';
-import {
-  DOWNLOAD_GPT_EXPORT_FAILED,
-  DOWNLOAD_GPT_EXPORT_READY,
-  isActionClickedMessage
-} from './shared/runtime-messages';
+
+const DOWNLOAD_GPT_ACTION_CLICKED = 'DOWNLOAD_GPT_ACTION_CLICKED';
+const DOWNLOAD_GPT_EXPORT_READY = 'DOWNLOAD_GPT_EXPORT_READY';
+const DOWNLOAD_GPT_EXPORT_FAILED = 'DOWNLOAD_GPT_EXPORT_FAILED';
 
 const INIT_MARKER_ID = 'download-gpt-init-marker';
 const CONTENT_CONTAINER_SELECTORS = ['main', '[role="main"]'] as const;
@@ -326,4 +325,13 @@ function toErrorMessage(error: unknown): string {
   }
 
   return 'Unknown export error.';
+}
+
+function isActionClickedMessage(value: unknown): value is { type: typeof DOWNLOAD_GPT_ACTION_CLICKED } {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'type' in value &&
+    value.type === DOWNLOAD_GPT_ACTION_CLICKED
+  );
 }
