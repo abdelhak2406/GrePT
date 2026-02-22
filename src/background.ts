@@ -1,5 +1,5 @@
 import type { ConversationExportPayload } from './shared/export-model';
-import { createArchiveDataUrl, createConversationArchive } from './shared/export-archive';
+import { toChatGptConversationsJson } from './shared/chatgpt-export';
 import {
   DOWNLOAD_GPT_ACTION_CLICKED,
   isExportFailedMessage,
@@ -36,15 +36,19 @@ chrome.runtime.onMessage.addListener((message) => {
 });
 
 async function downloadConversation(payload: ConversationExportPayload): Promise<void> {
-  const archive = createConversationArchive(payload);
-  const archiveUrl = createArchiveDataUrl(archive);
+  const conversationsJson = toChatGptConversationsJson(payload);
+  const exportUrl = createDataUrl(conversationsJson, 'application/json');
 
   await chrome.downloads.download({
-    url: archiveUrl,
-    filename: archive.fileName,
+    url: exportUrl,
+    filename: 'conversations.json',
     saveAs: true,
     conflictAction: 'uniquify'
   });
 
   console.info(`[DownloadGPT] exported ${payload.messages.length} messages`);
+}
+
+function createDataUrl(content: string, mimeType: string): string {
+  return `data:${mimeType};charset=utf-8,${encodeURIComponent(content)}`;
 }

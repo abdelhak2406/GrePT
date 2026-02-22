@@ -26,8 +26,6 @@ toolbox run -c dev npx vitest run -t "falls back when the title has no valid cha
 - Build artifacts are generated in `dist/`.
 - Load `dist/` as an unpacked extension in Chromium-based browsers.
 - Open any ChatGPT conversation page, click the extension action, and it downloads:
-  - `YYYY-MM-DD_HH-mm-ss_<title>.zip`
-- The ZIP archive contains:
-  - `YYYY-MM-DD_HH-mm-ss_<title>.md`
-  - `YYYY-MM-DD_HH-mm-ss_<title>.json`
+  - `conversations.json`
+- The JSON output follows a ChatGPT-compatible mapping structure that can be imported into LibreChat.
 - The exporter is DOM-based, so it can mark exports as partial when the page appears not fully loaded.
