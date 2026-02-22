@@ -1,9 +1,5 @@
 import type { ConversationExportPayload } from './shared/export-model';
-import {
-  createExportBaseFileName,
-  toJsonExportString,
-  toMarkdownExportString
-} from './shared/export-serializers';
+import { createArchiveDataUrl, createConversationArchive } from './shared/export-archive';
 import {
   DOWNLOAD_GPT_ACTION_CLICKED,
   isExportFailedMessage,
@@ -40,27 +36,15 @@ chrome.runtime.onMessage.addListener((message) => {
 });
 
 async function downloadConversation(payload: ConversationExportPayload): Promise<void> {
-  const baseName = createExportBaseFileName(payload.title, payload.exportedAt);
-  const markdownText = toMarkdownExportString(payload);
-  const jsonText = toJsonExportString(payload);
+  const archive = createConversationArchive(payload);
+  const archiveUrl = createArchiveDataUrl(archive);
 
   await chrome.downloads.download({
-    url: createDataUrl(markdownText, 'text/markdown'),
-    filename: `${baseName}.md`,
-    saveAs: false,
-    conflictAction: 'uniquify'
-  });
-
-  await chrome.downloads.download({
-    url: createDataUrl(jsonText, 'application/json'),
-    filename: `${baseName}.json`,
-    saveAs: false,
+    url: archiveUrl,
+    filename: archive.fileName,
+    saveAs: true,
     conflictAction: 'uniquify'
   });
 
   console.info(`[DownloadGPT] exported ${payload.messages.length} messages`);
-}
-
-function createDataUrl(content: string, mimeType: string): string {
-  return `data:${mimeType};charset=utf-8,${encodeURIComponent(content)}`;
 }
