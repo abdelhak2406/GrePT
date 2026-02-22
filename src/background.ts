@@ -1,5 +1,5 @@
 import type { ConversationExportPayload } from './shared/export-model';
-import { toChatGptConversationsJson } from './shared/chatgpt-export';
+import { toOpenWebUiChatsJson } from './shared/openwebui-export';
 import {
   DOWNLOAD_GPT_ACTION_CLICKED,
   isExportFailedMessage,
@@ -36,12 +36,12 @@ chrome.runtime.onMessage.addListener((message) => {
 });
 
 async function downloadConversation(payload: ConversationExportPayload): Promise<void> {
-  const conversationsJson = toChatGptConversationsJson(payload);
+  const conversationsJson = toOpenWebUiChatsJson(payload);
   const exportUrl = createDataUrl(conversationsJson, 'application/json');
 
   await chrome.downloads.download({
     url: exportUrl,
-    filename: 'conversations.json',
+    filename: 'openwebui-chats.json',
     saveAs: true,
     conflictAction: 'uniquify'
   });
