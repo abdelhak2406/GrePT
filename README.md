@@ -2,29 +2,22 @@
 
 grep your AI conversations and export them. ChatGPT today, more sources soon.
 
-```
-$ grept "what did I say about docker" chatgpt
-[GrePt] searching... found 1 conversation (42 messages)
-> grept-chats.json
-```
 
 ## Local development
 
-All commands should run inside the toolbox dev container.
-
 ```bash
-toolbox run -c dev npm install
-toolbox run -c dev npm run lint
-toolbox run -c dev npm run typecheck
-toolbox run -c dev npm run test
-toolbox run -c dev npm run build
+npm install
+npm run lint
+npm run typecheck
+npm run test
+npm run build
 ```
 
 ## Single-test examples
 
 ```bash
-toolbox run -c dev npx vitest run src/shared/sanitize-file-name.test.ts
-toolbox run -c dev npx vitest run -t "falls back when the title has no valid characters"
+npx vitest run src/shared/sanitize-file-name.test.ts
+npx vitest run -t "falls back when the title has no valid characters"
 ```
 
 ## Extension output
