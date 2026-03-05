@@ -1,16 +1,20 @@
-import type { ConversationExportPayload, ConversationMessage, ConversationRole } from './shared/export-model';
+import type {
+  ConversationExportPayload,
+  ConversationMessage,
+  ConversationRole
+} from './shared/export-model';
 
-const DOWNLOAD_GPT_ACTION_CLICKED = 'DOWNLOAD_GPT_ACTION_CLICKED';
-const DOWNLOAD_GPT_EXPORT_READY = 'DOWNLOAD_GPT_EXPORT_READY';
-const DOWNLOAD_GPT_EXPORT_FAILED = 'DOWNLOAD_GPT_EXPORT_FAILED';
+const GREPT_ACTION_CLICKED = 'GREPT_ACTION_CLICKED';
+const GREPT_EXPORT_READY = 'GREPT_EXPORT_READY';
+const GREPT_EXPORT_FAILED = 'GREPT_EXPORT_FAILED';
 
-const INIT_MARKER_ID = 'download-gpt-init-marker';
+const INIT_MARKER_ID = 'grept-init-marker';
 const CONTENT_CONTAINER_SELECTORS = ['main', '[role="main"]'] as const;
 
 if (!document.getElementById(INIT_MARKER_ID)) {
   const marker = document.createElement('meta');
   marker.id = INIT_MARKER_ID;
-  marker.setAttribute('data-extension', 'download-gpt');
+  marker.setAttribute('data-extension', 'grept');
   document.head.append(marker);
 }
 
@@ -27,13 +31,13 @@ async function handleExportRequest(): Promise<void> {
     await settlePage();
     const payload = extractConversationFromDom();
     await chrome.runtime.sendMessage({
-      type: DOWNLOAD_GPT_EXPORT_READY,
+      type: GREPT_EXPORT_READY,
       payload
     });
   } catch (error) {
     const message = toErrorMessage(error);
     await chrome.runtime.sendMessage({
-      type: DOWNLOAD_GPT_EXPORT_FAILED,
+      type: GREPT_EXPORT_FAILED,
       error: message
     });
   }
@@ -327,11 +331,11 @@ function toErrorMessage(error: unknown): string {
   return 'Unknown export error.';
 }
 
-function isActionClickedMessage(value: unknown): value is { type: typeof DOWNLOAD_GPT_ACTION_CLICKED } {
+function isActionClickedMessage(value: unknown): value is { type: typeof GREPT_ACTION_CLICKED } {
   return (
     typeof value === 'object' &&
     value !== null &&
     'type' in value &&
-    value.type === DOWNLOAD_GPT_ACTION_CLICKED
+    value.type === GREPT_ACTION_CLICKED
   );
 }

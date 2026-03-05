@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "DownloadGPT",
+  "name": "GrePt",
   "version": "0.1.0",
-  "description": "Export ChatGPT conversations to markdown and JSON.",
+  "description": "grep your AI conversations and export them.",
   "permissions": ["downloads", "storage", "activeTab", "scripting"],
   "host_permissions": ["https://chatgpt.com/*", "https://chat.openai.com/*"],
   "background": {
@@ -17,6 +17,6 @@
     }
   ],
   "action": {
-    "default_title": "DownloadGPT"
+    "default_title": "GrePt"
   }
 }

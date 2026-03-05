@@ -1,8 +1,8 @@
 {
-  "name": "download-gpt",
+  "name": "grept",
   "version": "0.1.0",
   "private": true,
-  "description": "Browser extension to export ChatGPT conversations.",
+  "description": "Browser extension to grep and export AI conversations. ChatGPT supported, more coming.",
   "type": "module",
   "scripts": {
     "build": "vite build",

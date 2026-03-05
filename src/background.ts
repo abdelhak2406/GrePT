@@ -1,13 +1,13 @@
 import type { ConversationExportPayload } from './shared/export-model';
 import { toOpenWebUiChatsJson } from './shared/openwebui-export';
 import {
-  DOWNLOAD_GPT_ACTION_CLICKED,
+  GREPT_ACTION_CLICKED,
   isExportFailedMessage,
   isExportReadyMessage
 } from './shared/runtime-messages';
 
 chrome.runtime.onInstalled.addListener(() => {
-  console.info('[DownloadGPT] extension installed');
+  console.info('[GrePt] extension installed');
 });
 
 chrome.action.onClicked.addListener(async (tab) => {
@@ -17,10 +17,10 @@ chrome.action.onClicked.addListener(async (tab) => {
 
   try {
     await chrome.tabs.sendMessage(tab.id, {
-      type: DOWNLOAD_GPT_ACTION_CLICKED
+      type: GREPT_ACTION_CLICKED
     });
   } catch (error) {
-    console.error('[DownloadGPT] unable to reach content script', error);
+    console.error('[GrePt] unable to reach content script', error);
   }
 });
 
@@ -31,7 +31,7 @@ chrome.runtime.onMessage.addListener((message) => {
   }
 
   if (isExportFailedMessage(message)) {
-    console.error('[DownloadGPT] export failed in content script', message.error);
+    console.error('[GrePt] export failed in content script', message.error);
   }
 });
 
@@ -41,12 +41,12 @@ async function downloadConversation(payload: ConversationExportPayload): Promise
 
   await chrome.downloads.download({
     url: exportUrl,
-    filename: 'openwebui-chats.json',
+    filename: 'grept-chats.json',
     saveAs: true,
     conflictAction: 'uniquify'
   });
 
-  console.info(`[DownloadGPT] exported ${payload.messages.length} messages`);
+  console.info(`[GrePt] exported ${payload.messages.length} messages`);
 }
 
 function createDataUrl(content: string, mimeType: string): string {
