@@ -2,6 +2,7 @@
   "name": "grept",
   "version": "0.1.0",
   "private": true,
+  "license": "MPL-2.0",
   "description": "Browser extension to grep and export AI conversations. ChatGPT supported, more coming.",
   "type": "module",
   "scripts": {
