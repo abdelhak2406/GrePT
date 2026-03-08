@@ -1,3 +1,4 @@
+name: Release Extension
 on:
   push:
     tags:
@@ -6,15 +7,21 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
-    container:
-      image: node:20
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - run: npm ci
-      - run: npm run build
+      - name: Install Dependencies
+        run: npm ci
+        
+      - name: Build App
+        run: npm run build
 
-      - run: zip -r grept-${{ gitea.ref_name }}.zip dist/
+      - name: Install Zip utility
+        run: apt-get update && apt-get install -y zip
+
+      - name: Zip the output
+        run: zip -r grept-${{ github.ref_name }}.zip dist/
 
       - name: Publish release
         uses: https://code.forgejo.org/forgejo/release-action@v1
@@ -23,3 +30,4 @@ jobs:
           release-dir: .
           release-notes: 'See README for installation instructions.'
           token: ${{ secrets.GITHUB_TOKEN }}
+
