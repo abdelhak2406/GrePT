@@ -2,6 +2,16 @@
 
 grep your AI conversations and export them. ChatGPT today, more sources soon.
 
+## Releases
+
+Pre-built releases are available on the [Releases page](https://git.bazedtux.com/bazedtux/download_gpt/releases).
+
+1. Download the latest `grept-vX.Y.Z.zip`
+2. Unzip it — you'll get a `dist/` folder
+3. Load it as an unpacked extension (see [Testing in the browser](#testing-in-the-browser))
+
+Releases are published automatically when a new version tag is pushed.
+
 ## Local development
 
 ```bash

@@ -1,0 +1,27 @@
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: docker
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - run: npm ci
+      - run: npm run build
+
+      - run: zip -r grept-${{ gitea.ref_name }}.zip dist/
+
+      - name: Publish release
+        uses: https://code.forgejo.org/forgejo/release-action@v1
+        with:
+          direction: upload
+          release-dir: .
+          release-notes: 'See README for installation instructions.'
+          token: ${{ secrets.GITHUB_TOKEN }}
