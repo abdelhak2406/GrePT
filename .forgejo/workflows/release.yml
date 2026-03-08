@@ -13,7 +13,7 @@ jobs:
 
       - name: Install Dependencies
         run: npm ci
-        
+
       - name: Build App
         run: npm run build
 
@@ -21,13 +21,22 @@ jobs:
         run: apt-get update && apt-get install -y zip
 
       - name: Zip the output
-        run: zip -r grept-${{ github.ref_name }}.zip dist/
+        run: zip -r grept-${{ gitea.ref_name }}.zip dist/
 
-      - name: Publish release
-        uses: https://code.forgejo.org/forgejo/release-action@v1
-        with:
-          direction: upload
-          release-dir: .
-          release-notes: 'See README for installation instructions.'
-          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create release and upload asset
+        run: |
+          curl -s -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d "{\"tag_name\":\"${{ gitea.ref_name }}\",\"name\":\"${{ gitea.ref_name }}\",\"body\":\"See README for installation instructions.\"}" \
+            https://git.bazedtux.com/api/v1/repos/${{ gitea.repository }}/releases
 
+          RELEASE_ID=$(curl -s \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            https://git.bazedtux.com/api/v1/repos/${{ gitea.repository }}/releases/tags/${{ gitea.ref_name }} \
+            | grep -o '"id":[0-9]*' | head -1 | cut -d: -f2)
+
+          curl -s -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -F "attachment=@grept-${{ gitea.ref_name }}.zip" \
+            https://git.bazedtux.com/api/v1/repos/${{ gitea.repository }}/releases/${RELEASE_ID}/assets
