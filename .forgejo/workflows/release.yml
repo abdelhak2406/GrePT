@@ -21,22 +21,22 @@ jobs:
         run: apt-get update && apt-get install -y zip
 
       - name: Zip the output
-        run: zip -r grept-${{ gitea.ref_name }}.zip dist/
+        run: zip -r grept-${{ github.ref_name }}.zip dist/
 
       - name: Create release and upload asset
         run: |
           curl -s -X POST \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Content-Type: application/json" \
-            -d "{\"tag_name\":\"${{ gitea.ref_name }}\",\"name\":\"${{ gitea.ref_name }}\",\"body\":\"See README for installation instructions.\"}" \
-            https://git.bazedtux.com/api/v1/repos/${{ gitea.repository }}/releases
+            -d "{\"tag_name\":\"${{ github.ref_name }}\",\"name\":\"${{ github.ref_name }}\",\"body\":\"See README for installation instructions.\"}" \
+            https://git.bazedtux.com/api/v1/repos/${{ github.repository }}/releases
 
           RELEASE_ID=$(curl -s \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            https://git.bazedtux.com/api/v1/repos/${{ gitea.repository }}/releases/tags/${{ gitea.ref_name }} \
+            https://git.bazedtux.com/api/v1/repos/${{ github.repository }}/releases/tags/${{ github.ref_name }} \
             | grep -o '"id":[0-9]*' | head -1 | cut -d: -f2)
 
           curl -s -X POST \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -F "attachment=@grept-${{ gitea.ref_name }}.zip" \
-            https://git.bazedtux.com/api/v1/repos/${{ gitea.repository }}/releases/${RELEASE_ID}/assets
+            -F "attachment=@grept-${{ github.ref_name }}.zip" \
+            https://git.bazedtux.com/api/v1/repos/${{ github.repository }}/releases/${RELEASE_ID}/assets
